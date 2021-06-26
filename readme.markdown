@@ -2,8 +2,10 @@
 
 The only one change we made was add the option: **throwAsValidationError**
 
-As the option name suggests, it will throw an immediate error it finds a not allowed tag instead of only remove it. 
+As the option name suggests, it will throw an immediate error it finds a not allowed tag instead of only remove it.
 This expands original functionality and allows check code beyond just sanitizing.
+
+original: https://github.com/bevacqua/insane.git
 
 # insane
 
@@ -22,7 +24,7 @@ npm install insane --save
 # Usage
 
 ```js
-insane('<div>foo<span>bar</span></div>', { allowedTags: ['div'] })
+insane("<div>foo<span>bar</span></div>", { allowedTags: ["div"] });
 // <- '<div>foo</div>'
 ```
 
@@ -55,8 +57,8 @@ An array of tags that you'll allow in the resulting HTML.
 > Only allow spans, discarding the rest of elements.
 
 ```js
-insane('<div>foo</div><span>bar</span>', {
-  allowedTags: ['span']
+insane("<div>foo</div><span>bar</span>", {
+  allowedTags: ["span"],
 });
 // <- '<span>bar</span>'
 ```
@@ -71,8 +73,8 @@ An object describing the attributes you'll allow for each individual tag name.
 
 ```js
 insane('<span id="bar" class="super">bar</span>', {
-  allowedTags: ['span'],
-  allowedAttributes: { span: ['id'] }
+  allowedTags: ["span"],
+  allowedAttributes: { span: ["id"] },
 });
 // <- '<span id="bar">bar</span>'
 ```
@@ -87,8 +89,8 @@ If `'class'` is listed as an allowed attribute, every single class will be allow
 
 ```js
 insane('<span class="super mean and bad">bar</span>', {
-  allowedTags: ['span'],
-  allowedClasses: { span: ['super', 'bad'] }
+  allowedTags: ["span"],
+  allowedClasses: { span: ["super", "bad"] },
 });
 // <- '<span class="super bad">bar</span>'
 ```
@@ -107,13 +109,13 @@ If you return a falsy value the element and all of its descendants will not be i
 > Require that `<span>` elements have an `aria-label` value.
 
 ```js
-function filter (token) {
-  return token.tag !== 'span' || token.attrs['aria-label'];
+function filter(token) {
+  return token.tag !== "span" || token.attrs["aria-label"];
 }
 insane('<span aria-label="a foo">foo</span><span>bar</span>', {
-  allowedTags: ['span'],
-  allowedAttributes: { span: ['aria-label'] },
-  filter: filter
+  allowedTags: ["span"],
+  allowedAttributes: { span: ["aria-label"] },
+  filter: filter,
 });
 // <- '<span aria-label="a foo">foo</span>'
 ```
@@ -136,10 +138,48 @@ The default configuration is used if you don't provide any. This object is avail
   "allowedClasses": {},
   "allowedSchemes": ["http", "https", "mailto"],
   "allowedTags": [
-    "a", "article", "b", "blockquote", "br", "caption", "code", "del", "details", "div", "em",
-    "h1", "h2", "h3", "h4", "h5", "h6", "hr", "i", "img", "ins", "kbd", "li", "main", "ol",
-    "p", "pre", "section", "span", "strike", "strong", "sub", "summary", "sup", "table",
-    "tbody", "td", "th", "thead", "tr", "u", "ul"
+    "a",
+    "article",
+    "b",
+    "blockquote",
+    "br",
+    "caption",
+    "code",
+    "del",
+    "details",
+    "div",
+    "em",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "hr",
+    "i",
+    "img",
+    "ins",
+    "kbd",
+    "li",
+    "main",
+    "ol",
+    "p",
+    "pre",
+    "section",
+    "span",
+    "strike",
+    "strong",
+    "sub",
+    "summary",
+    "sup",
+    "table",
+    "tbody",
+    "td",
+    "th",
+    "thead",
+    "tr",
+    "u",
+    "ul"
   ],
   "filter": null,
   "transformText": null

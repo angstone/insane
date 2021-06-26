@@ -1,3 +1,8 @@
+# 2.7.0 Validation
+
+- Added `throwAsValidationError` option allowing to throw validation error instead of sanitize
+
+# 2.6.2 Original Author Not Named This
 
 - Add 'u' tag to accepted whitelist.
 
