@@ -1,10 +1,9 @@
 # ANGSTONE CHANGES ON THE ORIGINAL:
 
-The only one change we make was add the option: **throwAsValidationError**
+The only one change we made was add the option: **throwAsValidationError**
 
-As the option name suggests, it will throw immediate error it it finds not allowed tag instead of only remove it.
-This expands original functionality and allows check code beyond just sanitize.
-
+As the option name suggests, it will throw an immediate error it finds a not allowed tag instead of only remove it. 
+This expands original functionality and allows check code beyond just sanitizing.
 
 # insane
 
