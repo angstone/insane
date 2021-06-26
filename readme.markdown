@@ -1,3 +1,11 @@
+# ANGSTONE CHANGES ON THE ORIGINAL:
+
+The only one change we make was add the option: **throwAsValidationError**
+
+As the option name suggests, it will throw immediate error it it finds not allowed tag instead of only remove it.
+This expands original functionality and allows check code beyond just sanitize.
+
+
 # insane
 
 > Lean and configurable whitelist-oriented HTML sanitizer
