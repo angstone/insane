@@ -1,11 +1,11 @@
-'use strict';
+"use strict";
 
-var he = require('he');
-var lowercase = require('./lowercase');
-var attributes = require('./attributes');
-var elements = require('./elements');
+var he = require("he");
+var lowercase = require("./lowercase");
+var attributes = require("./attributes");
+var elements = require("./elements");
 
-function sanitizer (buffer, options) {
+function sanitizer(buffer, options) {
   var last;
   var context;
   var o = options || {};
@@ -15,67 +15,72 @@ function sanitizer (buffer, options) {
   return {
     start: start,
     end: end,
-    chars: chars
+    chars: chars,
   };
 
-  function out (value) {
+  function out(value) {
     buffer.push(value);
   }
 
-  function start (tag, attrs, unary) {
+  function start(tag, attrs, unary) {
     var low = lowercase(tag);
 
     if (context.ignoring) {
-      ignore(low); return;
+      ignore(low);
+      return;
     }
     if ((o.allowedTags || []).indexOf(low) === -1) {
-      ignore(low); return;
+      ignore(low);
+      return;
     }
     if (o.filter && !o.filter({ tag: low, attrs: attrs })) {
-      ignore(low); return;
+      ignore(low);
+      return;
     }
 
-    out('<');
+    out("<");
     out(low);
     Object.keys(attrs).forEach(parse);
-    out(unary ? '/>' : '>');
+    out(unary ? "/>" : ">");
 
-    function parse (key) {
+    function parse(key) {
       var value = attrs[key];
       var classesOk = (o.allowedClasses || {})[low] || [];
       var attrsOk = (o.allowedAttributes || {})[low] || [];
-      attrsOk = attrsOk.concat((o.allowedAttributes || {})['*'] || []);
+      attrsOk = attrsOk.concat((o.allowedAttributes || {})["*"] || []);
       var valid;
       var lkey = lowercase(key);
-      if (lkey === 'class' && attrsOk.indexOf(lkey) === -1) {
-        value = value.split(' ').filter(isValidClass).join(' ').trim();
+      if (lkey === "class" && attrsOk.indexOf(lkey) === -1) {
+        value = value.split(" ").filter(isValidClass).join(" ").trim();
         valid = value.length;
       } else {
-        valid = attrsOk.indexOf(lkey) !== -1 && (attributes.uris[lkey] !== true || testUrl(value));
+        valid =
+          attrsOk.indexOf(lkey) !== -1 &&
+          (attributes.uris[lkey] !== true || testUrl(value));
       }
       if (valid) {
-        out(' ');
+        out(" ");
         out(key);
-        if (typeof value === 'string') {
+        if (typeof value === "string") {
           out('="');
           out(he.encode(value));
           out('"');
         }
       }
-      function isValidClass (className) {
+      function isValidClass(className) {
         return classesOk && classesOk.indexOf(className) !== -1;
       }
     }
   }
 
-  function end (tag) {
+  function end(tag) {
     var low = lowercase(tag);
     var allowed = (o.allowedTags || []).indexOf(low) !== -1;
     if (allowed) {
       if (context.ignoring === false) {
-        out('</');
+        out("</");
         out(low);
-        out('>');
+        out(">");
       } else {
         unignore(low);
       }
@@ -84,37 +89,42 @@ function sanitizer (buffer, options) {
     }
   }
 
-  function testUrl (text) {
+  function testUrl(text) {
     var start = text[0];
-    if (start === '#' || start === '/') {
+    if (start === "#" || start === "/") {
       return true;
     }
-    var colon = text.indexOf(':');
+    var colon = text.indexOf(":");
     if (colon === -1) {
       return true;
     }
-    var questionmark = text.indexOf('?');
+    var questionmark = text.indexOf("?");
     if (questionmark !== -1 && colon > questionmark) {
       return true;
     }
-    var hash = text.indexOf('#');
+    var hash = text.indexOf("#");
     if (hash !== -1 && colon > hash) {
       return true;
     }
     return o.allowedSchemes.some(matches);
 
-    function matches (scheme) {
-      return text.indexOf(scheme + ':') === 0;
+    function matches(scheme) {
+      return text.indexOf(scheme + ":") === 0;
     }
   }
 
-  function chars (text) {
+  function chars(text) {
     if (context.ignoring === false) {
       out(o.transformText ? o.transformText(text) : text);
     }
   }
 
-  function ignore (tag) {
+  function ignore(tag) {
+    if (o.throwAsValidationError === true) {
+      throw new Error(
+        "This code is not fully sanitized. It has disallowed code within."
+      );
+    }
     if (elements.voids[tag]) {
       return;
     }
@@ -125,7 +135,7 @@ function sanitizer (buffer, options) {
     }
   }
 
-  function unignore (tag) {
+  function unignore(tag) {
     if (context.ignoring === tag) {
       if (--context.depth <= 0) {
         reset();
@@ -133,7 +143,7 @@ function sanitizer (buffer, options) {
     }
   }
 
-  function reset () {
+  function reset() {
     context = { ignoring: false, depth: 0 };
   }
 }
